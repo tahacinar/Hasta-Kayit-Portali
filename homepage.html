@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="tr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasta Kayıt & Klinik Veri Portalı</title>
+    <!-- Tailwind CSS Kütüphanesi -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome İkon Kütüphanesi -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Özel Stil Dosyası -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-full font-sans antialiased text-slate-800">
+    
+    <!-- ========================================== -->
+    <!-- ANA UYGULAMA-->
+    <!-- ========================================== -->
+    <div id="homePage" class="min-h-screen bg-slate-150 flex flex-col">
+        
+        <!-- ========================================== -->
+        <!--        ÜST BİLGİ ÇUBUĞU (HEADER)           -->
+        <!-- ========================================== -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    
+                    <!-- Logo ve Portal Başlığı -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-md">H</div>
+                        <span class="font-bold text-lg text-slate-800 tracking-tight">Hasta Kayıt Portalı</span>
+                    </div>
+
+                    <!-- Kullanıcı Profili ve Çıkış Butonu -->
+                    <div class="flex items-center gap-4">
+                        <div class="hidden sm:flex items-center gap-3 pr-4 border-r border-slate-200">
+                            <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-sm">TC</div>
+                            <div class="text-left">
+                                <p class="text-xs font-semibold text-slate-700" id="userEmailDisplay">tahacinar@outlook.com.tr</p>
+                                <p class="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span> Çevrimiçi
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="handleLogout()" class="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition duration-200">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Çıkış Yap</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- SAYFA İÇERİK ALANI (MAIN)                  -->
+        <!-- ========================================== -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 fade-in">
+            
+            <!-- HOŞ GELDİNİZ KARŞILAMA BANNER'I -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-4 sm:p-5 text-white shadow-lg mb-6 relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-1">Hoş Geldiniz, Muhammed Taha Çınar</h2>
+                    <p class="text-blue-100 text-xs sm:text-sm leading-relaxed">
+                        Aşağıdaki form aracılığıyla hastanın klinik verilerini detaylı şekilde kaydedebilirsiniz.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FORM KARTI -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10">
+                
+                <!-- Form Başlığı ve Açıklaması -->
+                <div class="flex items-center justify-between border-b border-slate-100 pb-6 mb-8">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-notes-medical text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800">Hasta Tıbbi Veri Formu</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1">Lütfen hastaya ait demografik, klinik ve laboratuvar parametrelerini eksiksiz giriniz</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="patientFormMsg" class="hidden mb-8 p-4 rounded-xl text-sm font-medium transition-all duration-300"></div>
+
+                <!-- HASTA TIBBİ VERİ FORMU -->
+                <form id="patientDataForm" onsubmit="handlePatientFormSubmit(event)" class="space-y-10" novalidate>
+                    
+                    <!-- ========================================== -->
+                    <!-- BÖLÜM 1: DEMOGRAFİK & KLİNİK BİLGİLER        -->
+                    <!-- ========================================== -->
+                    <div class="space-y-6">
+                        <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-user-doctor"></i> Demografik & Klinik Bilgileri
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div class="sm:col-span-2">
+                                <label for="patientFullName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Hasta İsim Soyisim</label>
+                                <input type="text" id="patientFullName" placeholder="Örn: Muhammed Taha Çınar" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Bu alan boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="patientAge" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Yaş</label>
+                                <input type="number" id="patientAge" min="0" max="120" placeholder="Örn: 29" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Yaş boş bırakılamaz!</span></p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div>
+                                <label for="patientGender" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Cinsiyet</label>
+                                <select id="patientGender" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="" disabled selected>Seçiniz</option>
+                                    <option value="Kadın">Kadın</option>
+                                    <option value="Erkek">Erkek</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Lütfen cinsiyet seçiniz!</span></p>
+                            </div>
+                            <div>
+                                <label for="patientHeight" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Boy (cm)</label>
+                                <div class="relative">
+                                    <input type="number" id="patientHeight" oninput="calculateBmi()" min="50" max="250" placeholder="Örn: 189" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-12">
+                                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-slate-400 pointer-events-none">cm</span>
+                                    <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Bu alan boş bırakılamaz!</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="patientWeight" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Kilo (kg)</label>
+                                <div class="relative">
+                                    <input type="number" id="patientWeight" oninput="calculateBmi()" min="20" max="300" step="0.1" placeholder="Örn: 82.5" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-10">
+                                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-slate-400 pointer-events-none">kg</span>
+                                    <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Bu alan boş bırakılamaz!</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="patientBmi" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Vücut Kitle İndeksi (VKİ)</label>
+                                <div class="relative">
+                                    <input type="number" id="patientBmi" step="0.1" readonly placeholder="Boy/Kilo ile hesaplanır" class="w-full px-4 py-3.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-700 font-semibold focus:outline-none text-sm pr-16 cursor-not-allowed">
+                                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-slate-400 pointer-events-none">kg/m²</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="diabetesDuration" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Diyabet Süresi</label>
+                                <div class="relative">
+                                    <input type="number" id="diabetesDuration" min="0" step="0.5" placeholder="Örn: 8" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-12">
+                                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-slate-400 pointer-events-none">Ay</span>
+                                    <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Bu alan boş bırakılamaz!</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="trackingClinic" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Hastayı Takip Eden Klinik / Branş</label>
+                                <select id="trackingClinic" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="" disabled selected>Klinik / Branş Seçiniz</option>
+                                    <option value="Endokrinoloji">Endokrinoloji</option>
+                                    <option value="Kardiyoloji">Kardiyoloji</option>
+                                    <option value="Nefroloji">Nefroloji</option>
+                                    <option value="Dahiliye">İç Hastalıkları (Dahiliye)</option>
+                                    <option value="Aile Hekimliği">Aile Hekimliği</option>
+                                    <option value="Diğer">Diğer</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Klinik / Branş seçimi boş bırakılamaz!</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100 my-8">
+
+                    <!-- ========================================== -->
+                    <!-- BÖLÜM 2: LABORATUVAR DEĞERLERİ              -->
+                    <!-- ========================================== -->
+                    <div class="space-y-6">
+                        <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-vial"></i> Laboratuvar Değerleri
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div>
+                                <label for="hba1c" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">HbA1c (%)</label>
+                                <div class="relative">
+                                    <input type="number" id="hba1c" step="0.1" min="3" max="20" placeholder="Örn: 7.5" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-10">
+                                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-slate-400 pointer-events-none">%</span>
+                                    <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>HbA1c değeri boş bırakılamaz!</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="creatinine" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Kreatinin (mg/dL)</label>
+                                <input type="number" id="creatinine" step="0.01" min="0.1" placeholder="Örn: 1.1" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Kreatinin değeri boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="egfr" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">eGFR (mL/min/1.73m²)</label>
+                                <input type="number" id="egfr" step="1" min="0" max="200" placeholder="Örn: 85" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>eGFR değeri boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="uacr" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">UACR / Proteinüri</label>
+                                <input type="text" id="uacr" placeholder="Örn: 35 mg/g veya Normoalbüminüri" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>UACR / Proteinüri boş bırakılamaz!</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100 my-8">
+
+                    <!-- ========================================== -->
+                    <!-- BÖLÜM 3: KLİNİK TANILAR & EVRELEME           -->
+                    <!-- ========================================== -->
+                    <div class="space-y-6">
+                        <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-heart-pulse"></i> Klinik Tanılar & Evreleme
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="ckdStage" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Kronik Böbrek Hastalığı (KBH)</label>
+                                <select id="ckdStage" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="" disabled selected>Evre Seçiniz</option>                     
+                                    <option value="Bilinmiyor">Bilinmiyor</option>
+                                    <option value="Yok">Yok / Normal</option>
+                                    <option value="Evre 1">Evre 1</option>
+                                    <option value="Evre 2">Evre 2</option>
+                                    <option value="Evre 3a">Evre 3a</option>
+                                    <option value="Evre 3b">Evre 3b</option>
+                                    <option value="Evre 4">Evre 4</option>
+                                    <option value="Evre 5">Evre 5 (Diyaliz/Son Evre)</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>KBH evresi seçimi boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="heartFailure" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Kalp Yetersizliği Varlığı</label>
+                                <select id="heartFailure" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="" disabled selected>Seçiniz</option>
+                                    <option value="Yok">Yok</option>
+                                    <option value="Var">Var</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Kalp yetersizliği varlığı boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="ascvd" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">ASKVH (Aterosklerotik KVH)</label>
+                                <select id="ascvd" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="" disabled selected>Seçiniz</option>
+                                    <option value="Yok">Yok</option>
+                                    <option value="Var">Var</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>ASKVH durumu boş bırakılamaz!</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100 my-8">
+
+                    <!-- ========================================== -->
+                    <!-- BÖLÜM 4: TEDAVİ & İLAÇ KULLANIMI            -->
+                    <!-- ========================================== -->
+                    <div class="space-y-6">
+                        <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-pills"></i> Tedavi & İlaç Kullanımı
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="md:col-span-2">
+                                <label for="antidiabetics" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Kullanılan Antidiyabetik İlaçlar</label>
+                                <input type="text" id="antidiabetics" placeholder="Örn: Metformin, DPP-4 İnhibitörü, Sülfonilüre" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Antidiyabetik ilaçlar boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="totalMeds" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">Kullanılan Toplam İlaç Sayısı</label>
+                                <input type="number" id="totalMeds" min="0" placeholder="Örn: 4" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Toplam ilaç sayısı boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="insulinUse" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">İnsülin Kullanımı</label>
+                                <select id="insulinUse" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="" disabled selected>Seçiniz</option>
+                                    <option value="Hayır">Hayır (Kullanmıyor)</option>
+                                    <option value="Evet - Bazal">Evet (Bazal İnsülin)</option>
+                                    <option value="Evet - MDI">Evet (Çoklu Doz / MDI)</option>
+                                    <option value="Evet - Karışım">Evet (Hazır Karışım)</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>İnsülin kullanımı boş bırakılamaz!</span></p>
+                            </div>
+                            <div>
+                                <label for="sglt2Use" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2.5">SGLT-2 İnhibitörü Kullanımı</label>
+                                <select id="sglt2Use" onchange="toggleSglt2Reason()" class="custom-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="" disabled selected>Seçiniz</option>
+                                    <option value="Evet">Evet</option>
+                                    <option value="Hayır">Hayır</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>İnhibitörü kullanımı boş bırakılamaz!</span></p>
+                            </div>
+                            
+                            <!-- Koşullu Alan: SGLT-2 Başlanmama Nedeni -->
+                            <div id="sglt2ReasonContainer">
+                                <label for="sglt2Reason" class="block text-xs font-semibold text-amber-700 uppercase tracking-wider mb-2.5">SGLT-2 Başlanmama Nedeni</label>
+                                <select id="sglt2Reason" onchange="toggleSglt2OtherInput()" class="custom-input w-full px-4 py-3.5 bg-amber-50/50 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm text-amber-900">
+                                    <option value="" disabled selected>Nedeni Seçiniz</option>
+                                    <option value="Yan Etki (Genital/Üriner Enfeksiyon vb.)">Yan Etki Geçmişi / Risk</option>
+                                    <option value="Maliyet / Geri Ödeme Şartları">Maliyet / Geri Ödeme Şartları</option>
+                                    <option value="Hekim Tercihi">Hekim Tercihi</option>
+                                    <option value="Hasta Tercihi / Reddi">Hasta Tercihi / Reddi</option>
+                                    <option value="Diğer">Diğer</option>
+                                </select>
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Başlanmama nedeni boş bırakılamaz!</span></p>
+                            </div>
+                            
+                            <!-- Koşullu Alt Alan: Diğer Neden Açıklaması -->
+                            <div id="sglt2OtherReasonContainer" class="hidden col-span-full">
+                                <label for="sglt2OtherReasonInput" class="block text-xs font-semibold text-amber-700 uppercase tracking-wider mb-2.5">Diğer Nedeni Belirtiniz</label>
+                                <input type="text" id="sglt2OtherReasonInput" placeholder="Lütfen nedeni açıklayınız..." class="custom-input w-full px-4 py-3.5 bg-amber-50/50 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm text-amber-900">
+                                <p class="field-error hidden mt-1.5 text-xs font-medium text-rose-600 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i><span>Bu alan boş bırakılamaz!</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- FORM AKSİYON BUTONLARI (TEMİZLE & KAYDET)   -->
+                    <!-- ========================================== -->
+                    <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-4">
+                        <button type="button" onclick="resetPatientForm()" class="w-full sm:w-auto px-7 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition text-sm">Formu Temizle</button>
+                        <button type="submit" class="btn-primary w-full sm:w-auto px-9 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i><span>Verileri Kaydet</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Kimlik / Oturum Yönetimi Scripti -->
+    <script src="auth.js"></script>
+</body>
+</html>
